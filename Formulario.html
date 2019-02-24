@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<title>Gateway Whatsapp</title>
+<style>
+.bg-facebook {
+    background-color: #0062cc!important;
+}
+.display-3 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.txt-titulo{font-size:40px;}
+.quadro-image{width: 55px;
+    height: 55px;
+    background: #0062cc;
+    color: #FFF;
+    text-align: center;
+    line-height: 55px;
+    font-size: 27px;}
+</style>
+</head>
+
+<body onload="ListaContatos();">
+<header>
+      
+      <div class="navbar navbar-dark bg-facebook shadow-sm">
+        <div class="container d-flex justify-content-between">
+          <a href="#" class="navbar-brand d-flex align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            <strong style="font-weight: 100;">Ferramenta envio de mensagens</strong>
+          </a>
+          
+        </div>
+      </div>
+    </header>
+    
+<main role="main">     
+<div class="container mt-5">
+
+
+<div class="row" id="galerias">
+	<div class="col-md-6">
+    <h2>Formulario de contato</h2>
+    <form>
+  <div class="form-group">
+    <label for="numero">Numero do contato</label>
+    <input type="text" class="form-control" id="numero" placeholder="5512988101019">
+  </div>
+  <div class="form-group">
+  <div class="row">
+  <div class="col-md-3">
+    <label for="intervalo">Intervalo</label>
+    <select class="form-control" id="intervalo">
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option selected="selected">4</option>
+      <option>5</option>
+    </select>
+    </div>
+    <div class="col-md-9">
+    <label for="data">Data de envio.</label>
+    <input type="date" class="form-control" id="data">
+    </div>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="mensagem">Mensagem</label>
+    <textarea class="form-control" id="mensagem" rows="3"></textarea>
+  </div>
+  
+  <button id="enviarMensagem" class="btn btn-primary">Enviar mensagem</button>
+</form>
+    </div>
+    
+    <div class="col-md-6" style="background: #fff;
+    border-left: 2px solid #00000017;">
+    <h2>Lista de contatos. <a class="btn btn-primary" style="float:right; color:#FFF;" data-toggle="modal" data-target="#NovoContato">Novo contato</a></h2>
+    <div class="row">
+    	<div class="col-md-12">
+        	<select id="ListaGrupo" class="form-control" onchange="selecionaGrupo(this.value);">
+            	<option>Carregando...</option>
+            </select>
+        </div>
+    </div>
+    <!--
+    <div class="media text-muted pt-3">
+          <img class="mr-2 rounded" src="https://dyn.web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.11540-24%2F16489558_264122007349359_4173519205850677248_n.jpg%3Foe%3D5C35F306%26oh%3D2a6064362acf48d233e6c811e03b912a&t=s&u=5512988101019%40c.us&i=1473456291" style="width: 32px; height: 32px;">
+          <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <div class="d-flex justify-content-between align-items-center w-100">
+              <strong class="text-gray-dark">Gelson Luiz Ramos Pereira Junior</strong>
+              <a href="#">Responder</a>
+            </div>
+            <span class="d-block">Qual o valor da internet na minha cidade?</span>
+          </div>
+        </div>
+    -->
+    <div id="myContact">
+    
+    </div>
+        
+    </div>
+</div>
+</div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script>
+var grupo = "all";
+$( document ).ready(function() {
+	Grupos();
+	$("#BtnNovoContato").click(function(){
+		var nome = $("#NomeContato").val();
+		var whatsapp = $("#whatsapp").val();
+		var ngrupo = $("#grupoContato").val();
+		
+		if(whatsapp == ""){
+			alert('Obrigatorio o preenchimento com apenas numeros.')
+		}else if(ngrupo == "all"){
+			alert('Selecione um grupo que não seja todos.')
+		}else{
+		$.post('contato', {nome:nome,whatsapp:whatsapp,grupo:ngrupo}, function(x){
+						console.log(x);
+						alert(x)
+					});
+		}
+					
+		});
+		
+    $("#enviarMensagem").click(function(event){
+			event.preventDefault();
+			var numero = $("#numero").val()
+			var intervalo = $("#intervalo").val()
+			var data = $("#data").val()
+			var mensagem = $("#mensagem").val()
+			
+			if(numero == ""){
+				alert("O campo numero de contato é obrigatorio.")
+			}else if(mensagem == ""){
+				alert("O campo mensagem é obrigatorio.");
+			}else{
+				
+				$.post('mensagem', {numero:numero,intervalo:intervalo,data:data,mensagem:mensagem}, function(x){
+						console.log(x);
+						alert(x)
+					});
+			}
+			
+		});
+});
+
+function selecionaGrupo(valor){
+	grupo = valor;
+	ListaContatos();
+}
+function Grupos(){
+	var vl = "<option value='all'>Todos</option>";
+	$.get( 'grupo' ,{}, function ( data )
+    {
+
+        var obj = JSON.parse( data );
+		$.each(obj, function(i,element){
+			vl += '<option value="'+element.id+'">'+element.nome+'</option>'
+		});
+		$("#ListaGrupo, #grupoContato").html(vl);
+	});
+}
+function ListaContatos(){
+ var acumula = "";
+    $.get( 'listacontato/'+grupo ,{}, function ( data )
+    {
+
+        var obj = JSON.parse( data );
+
+		$.each(obj, function(i,element){
+			acumula += '<div class="media text-muted pt-3">'+
+    '<div class="mr-2 rounded quadro-image">'+i+'</div>'+
+          '<div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">'+
+            '<div class="d-flex justify-content-between align-items-center w-100">'+
+              '<strong class="text-gray-dark">'+element.nome+'</strong>'+
+              '<a href="#" onclick="CarregaForm(\''+element.telefone+'\')">Mensagem</a>'+
+            '</div>'+
+            '<span class="d-block">+55 (12) 98810-1019</span>'+
+          '</div>'+
+        '</div>';
+			});
+			$("#myContact").html(acumula)
+        //$( '#response' ).html( obj.content );
+ 
+        // reconecta ao receber uma resposta do servidor
+        setTimeout(function(){ ListaContatos() }, 3000);
+    });
+}
+function CarregaForm(phone){
+	$("#numero").val(phone);
+}
+</script>
+
+
+<div class="modal fade" id="NovoContato" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Novo Contato</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Nome:</label>
+            <input type="text" class="form-control" id="NomeContato">
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">WhatsApp:</label>
+            <input type="text" class="form-control" id="whatsapp" placeholder="5512988101019">
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Grupo:</label>
+            <select id="grupoContato" class="form-control">
+            
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+        <button type="button" class="btn btn-primary" id="BtnNovoContato">Salvar Contato</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
